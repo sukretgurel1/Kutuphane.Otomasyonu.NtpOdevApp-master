@@ -1,0 +1,338 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="DbKutuphaneModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="tblKitap">
+          <Key>
+            <PropertyRef Name="kitapID" />
+          </Key>
+          <Property Name="kitapID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="kitapAd" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="kitapYazarID" Type="int" Nullable="false" />
+          <Property Name="kitapTurID" Type="int" Nullable="false" />
+          <Property Name="kitapVerildiMi" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="tblTur">
+          <Key>
+            <PropertyRef Name="TurID" />
+          </Key>
+          <Property Name="TurID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="TurAd" Type="nvarchar" MaxLength="250" Nullable="false" />
+        </EntityType>
+        <EntityType Name="tblUye">
+          <Key>
+            <PropertyRef Name="UyeID" />
+          </Key>
+          <Property Name="UyeID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UyeAd" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="UyeSoyad" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="UyeTel" Type="char" MaxLength="11" Nullable="false" />
+          <Property Name="UyeMail" Type="nvarchar" MaxLength="100" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'DbKutuphane.dbo.tblUyeKitap' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="tblUyeKitap">
+          <Key>
+            <PropertyRef Name="KitapID" />
+            <PropertyRef Name="UyeID" />
+            <PropertyRef Name="VerilisTarihi" />
+          </Key>
+          <Property Name="KitapID" Type="int" Nullable="false" />
+          <Property Name="UyeID" Type="int" Nullable="false" />
+          <Property Name="VerilisTarihi" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="tblYazar">
+          <Key>
+            <PropertyRef Name="YazarID" />
+          </Key>
+          <Property Name="YazarID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="YazarAd" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="YazarSoyad" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_tblKitap_tblTur">
+          <End Role="tblTur" Type="Self.tblTur" Multiplicity="1" />
+          <End Role="tblKitap" Type="Self.tblKitap" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblTur">
+              <PropertyRef Name="TurID" />
+            </Principal>
+            <Dependent Role="tblKitap">
+              <PropertyRef Name="kitapTurID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblKitap_tblYazar">
+          <End Role="tblYazar" Type="Self.tblYazar" Multiplicity="1" />
+          <End Role="tblKitap" Type="Self.tblKitap" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblYazar">
+              <PropertyRef Name="YazarID" />
+            </Principal>
+            <Dependent Role="tblKitap">
+              <PropertyRef Name="kitapYazarID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblUyeKitap_tblKitap">
+          <End Role="tblKitap" Type="Self.tblKitap" Multiplicity="1" />
+          <End Role="tblUyeKitap" Type="Self.tblUyeKitap" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblKitap">
+              <PropertyRef Name="kitapID" />
+            </Principal>
+            <Dependent Role="tblUyeKitap">
+              <PropertyRef Name="KitapID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblUyeKitap_tblUye">
+          <End Role="tblUye" Type="Self.tblUye" Multiplicity="1" />
+          <End Role="tblUyeKitap" Type="Self.tblUyeKitap" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblUye">
+              <PropertyRef Name="UyeID" />
+            </Principal>
+            <Dependent Role="tblUyeKitap">
+              <PropertyRef Name="UyeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="DbKutuphaneModelStoreContainer">
+          <EntitySet Name="tblKitap" EntityType="Self.tblKitap" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblTur" EntityType="Self.tblTur" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblUye" EntityType="Self.tblUye" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblYazar" EntityType="Self.tblYazar" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblUyeKitap" EntityType="Self.tblUyeKitap" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [tblUyeKitap].[KitapID] AS [KitapID], 
+    [tblUyeKitap].[UyeID] AS [UyeID], 
+    [tblUyeKitap].[VerilisTarihi] AS [VerilisTarihi]
+    FROM [dbo].[tblUyeKitap] AS [tblUyeKitap]</DefiningQuery>
+          </EntitySet>
+          <AssociationSet Name="FK_tblKitap_tblTur" Association="Self.FK_tblKitap_tblTur">
+            <End Role="tblTur" EntitySet="tblTur" />
+            <End Role="tblKitap" EntitySet="tblKitap" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblKitap_tblYazar" Association="Self.FK_tblKitap_tblYazar">
+            <End Role="tblYazar" EntitySet="tblYazar" />
+            <End Role="tblKitap" EntitySet="tblKitap" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblUyeKitap_tblKitap" Association="Self.FK_tblUyeKitap_tblKitap">
+            <End Role="tblKitap" EntitySet="tblKitap" />
+            <End Role="tblUyeKitap" EntitySet="tblUyeKitap" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblUyeKitap_tblUye" Association="Self.FK_tblUyeKitap_tblUye">
+            <End Role="tblUye" EntitySet="tblUye" />
+            <End Role="tblUyeKitap" EntitySet="tblUyeKitap" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="DbKutuphaneModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="tblKitap">
+          <Key>
+            <PropertyRef Name="kitapID" />
+          </Key>
+          <Property Name="kitapID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="kitapAd" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="kitapYazarID" Type="Int32" Nullable="false" />
+          <Property Name="kitapTurID" Type="Int32" Nullable="false" />
+          <Property Name="kitapVerildiMi" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="tblTur" Relationship="Self.FK_tblKitap_tblTur" FromRole="tblKitap" ToRole="tblTur" />
+          <NavigationProperty Name="tblYazar" Relationship="Self.FK_tblKitap_tblYazar" FromRole="tblKitap" ToRole="tblYazar" />
+          <NavigationProperty Name="tblUyeKitap" Relationship="Self.FK_tblUyeKitap_tblKitap" FromRole="tblKitap" ToRole="tblUyeKitap" />
+        </EntityType>
+        <EntityType Name="tblTur">
+          <Key>
+            <PropertyRef Name="TurID" />
+          </Key>
+          <Property Name="TurID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TurAd" Type="String" MaxLength="250" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="tblKitap" Relationship="Self.FK_tblKitap_tblTur" FromRole="tblTur" ToRole="tblKitap" />
+        </EntityType>
+        <EntityType Name="tblUye">
+          <Key>
+            <PropertyRef Name="UyeID" />
+          </Key>
+          <Property Name="UyeID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UyeAd" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="UyeSoyad" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="UyeTel" Type="String" MaxLength="11" FixedLength="true" Unicode="false" Nullable="false" />
+          <Property Name="UyeMail" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="tblUyeKitap" Relationship="Self.FK_tblUyeKitap_tblUye" FromRole="tblUye" ToRole="tblUyeKitap" />
+        </EntityType>
+        <EntityType Name="tblYazar">
+          <Key>
+            <PropertyRef Name="YazarID" />
+          </Key>
+          <Property Name="YazarID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="YazarAd" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="YazarSoyad" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="tblKitap" Relationship="Self.FK_tblKitap_tblYazar" FromRole="tblYazar" ToRole="tblKitap" />
+        </EntityType>
+        <EntityType Name="tblUyeKitap">
+          <Key>
+            <PropertyRef Name="KitapID" />
+            <PropertyRef Name="UyeID" />
+            <PropertyRef Name="VerilisTarihi" />
+          </Key>
+          <Property Name="KitapID" Type="Int32" Nullable="false" />
+          <Property Name="UyeID" Type="Int32" Nullable="false" />
+          <Property Name="VerilisTarihi" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="tblKitap" Relationship="Self.FK_tblUyeKitap_tblKitap" FromRole="tblUyeKitap" ToRole="tblKitap" />
+          <NavigationProperty Name="tblUye" Relationship="Self.FK_tblUyeKitap_tblUye" FromRole="tblUyeKitap" ToRole="tblUye" />
+        </EntityType>
+        <Association Name="FK_tblKitap_tblTur">
+          <End Role="tblTur" Type="Self.tblTur" Multiplicity="1" />
+          <End Role="tblKitap" Type="Self.tblKitap" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblTur">
+              <PropertyRef Name="TurID" />
+            </Principal>
+            <Dependent Role="tblKitap">
+              <PropertyRef Name="kitapTurID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblKitap_tblYazar">
+          <End Role="tblYazar" Type="Self.tblYazar" Multiplicity="1" />
+          <End Role="tblKitap" Type="Self.tblKitap" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblYazar">
+              <PropertyRef Name="YazarID" />
+            </Principal>
+            <Dependent Role="tblKitap">
+              <PropertyRef Name="kitapYazarID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblUyeKitap_tblKitap">
+          <End Role="tblKitap" Type="Self.tblKitap" Multiplicity="1" />
+          <End Role="tblUyeKitap" Type="Self.tblUyeKitap" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblKitap">
+              <PropertyRef Name="kitapID" />
+            </Principal>
+            <Dependent Role="tblUyeKitap">
+              <PropertyRef Name="KitapID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblUyeKitap_tblUye">
+          <End Role="tblUye" Type="Self.tblUye" Multiplicity="1" />
+          <End Role="tblUyeKitap" Type="Self.tblUyeKitap" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblUye">
+              <PropertyRef Name="UyeID" />
+            </Principal>
+            <Dependent Role="tblUyeKitap">
+              <PropertyRef Name="UyeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="KutuphaneContext" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="tblKitap" EntityType="Self.tblKitap" />
+          <EntitySet Name="tblTur" EntityType="Self.tblTur" />
+          <EntitySet Name="tblUye" EntityType="Self.tblUye" />
+          <EntitySet Name="tblYazar" EntityType="Self.tblYazar" />
+          <EntitySet Name="tblUyeKitap" EntityType="Self.tblUyeKitap" />
+          <AssociationSet Name="FK_tblKitap_tblTur" Association="Self.FK_tblKitap_tblTur">
+            <End Role="tblTur" EntitySet="tblTur" />
+            <End Role="tblKitap" EntitySet="tblKitap" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblKitap_tblYazar" Association="Self.FK_tblKitap_tblYazar">
+            <End Role="tblYazar" EntitySet="tblYazar" />
+            <End Role="tblKitap" EntitySet="tblKitap" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblUyeKitap_tblKitap" Association="Self.FK_tblUyeKitap_tblKitap">
+            <End Role="tblKitap" EntitySet="tblKitap" />
+            <End Role="tblUyeKitap" EntitySet="tblUyeKitap" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblUyeKitap_tblUye" Association="Self.FK_tblUyeKitap_tblUye">
+            <End Role="tblUye" EntitySet="tblUye" />
+            <End Role="tblUyeKitap" EntitySet="tblUyeKitap" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="DbKutuphaneModelStoreContainer" CdmEntityContainer="KutuphaneContext">
+          <EntitySetMapping Name="tblKitap">
+            <EntityTypeMapping TypeName="DbKutuphaneModel.tblKitap">
+              <MappingFragment StoreEntitySet="tblKitap">
+                <ScalarProperty Name="kitapID" ColumnName="kitapID" />
+                <ScalarProperty Name="kitapAd" ColumnName="kitapAd" />
+                <ScalarProperty Name="kitapYazarID" ColumnName="kitapYazarID" />
+                <ScalarProperty Name="kitapTurID" ColumnName="kitapTurID" />
+                <ScalarProperty Name="kitapVerildiMi" ColumnName="kitapVerildiMi" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblTur">
+            <EntityTypeMapping TypeName="DbKutuphaneModel.tblTur">
+              <MappingFragment StoreEntitySet="tblTur">
+                <ScalarProperty Name="TurID" ColumnName="TurID" />
+                <ScalarProperty Name="TurAd" ColumnName="TurAd" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblUye">
+            <EntityTypeMapping TypeName="DbKutuphaneModel.tblUye">
+              <MappingFragment StoreEntitySet="tblUye">
+                <ScalarProperty Name="UyeID" ColumnName="UyeID" />
+                <ScalarProperty Name="UyeAd" ColumnName="UyeAd" />
+                <ScalarProperty Name="UyeSoyad" ColumnName="UyeSoyad" />
+                <ScalarProperty Name="UyeTel" ColumnName="UyeTel" />
+                <ScalarProperty Name="UyeMail" ColumnName="UyeMail" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblYazar">
+            <EntityTypeMapping TypeName="DbKutuphaneModel.tblYazar">
+              <MappingFragment StoreEntitySet="tblYazar">
+                <ScalarProperty Name="YazarID" ColumnName="YazarID" />
+                <ScalarProperty Name="YazarAd" ColumnName="YazarAd" />
+                <ScalarProperty Name="YazarSoyad" ColumnName="YazarSoyad" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblUyeKitap">
+            <EntityTypeMapping TypeName="DbKutuphaneModel.tblUyeKitap">
+              <MappingFragment StoreEntitySet="tblUyeKitap">
+                <ScalarProperty Name="KitapID" ColumnName="KitapID" />
+                <ScalarProperty Name="UyeID" ColumnName="UyeID" />
+                <ScalarProperty Name="VerilisTarihi" ColumnName="VerilisTarihi" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
