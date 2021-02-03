@@ -10,7 +10,7 @@ namespace Models
     {
         public int ID { get; set; }
         public string Ad { get; set; }
-        public int KitapID { get; set; }
+        public int YazarID { get; set; }
         public int TurID { get; set; }
         public int VerildiMi { get; set; }
     }
